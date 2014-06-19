@@ -15,9 +15,15 @@ def bible_tokenizer(text):
         if re.match(r'\d+:\d+', word) is not None: continue
         yield word.strip('\'"()')
 
+def koran_tokenizer(text):
+    for word in text.split():
+        if re.match(r'\d+', word) is not None: continue
+        yield word.strip('\'"()')
+
 TOKENIZERS = {
     'default': default_tokenizer,
     'bible': bible_tokenizer,
+    'koran': koran_tokenizer,
 }
 
 def main(inputfile, states, outputwords, tokenizer='default'):
