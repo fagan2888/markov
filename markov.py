@@ -4,8 +4,6 @@ from collections import defaultdict
 import random
 import numpy as np
 
-from progress import ProgressMonitor
-
 def default_tokenizer(text):
     for word in text.split():
         yield word
@@ -37,13 +35,10 @@ def main(inputfile, states, outputwords, tokenizer='default'):
 
     words = list(tokenize(text))
     model = defaultdict(lambda: defaultdict(int))
-    prog = ProgressMonitor(total=(len(words) - states - 1),
-                           msg='Building model')
 
     for words, next_word in zip(
             zip(*[words[i:] for i in range(states)]), words[states:]):
         model[words][next_word] += 1
-        prog.increment()
 
     candidates = [key for key in model.keys() if key[0].istitle()]
     string = list(random.choice(candidates))
@@ -58,7 +53,6 @@ def main(inputfile, states, outputwords, tokenizer='default'):
         string.append(next_word)
         w += 1
 
-    print
     print ' '.join(string)
 
 if __name__ == '__main__':
