@@ -8,6 +8,11 @@ def default_tokenizer(text):
     for word in text.split():
         yield word
 
+def poem_tokenizer(text):
+    for word in text.split(' '):
+        if len(word) == 0: continue
+        yield word
+
 def bible_tokenizer(text):
     for word in text.split():
         if re.match(r'\d+:\d+', word) is not None: continue
@@ -22,6 +27,7 @@ TOKENIZERS = {
     'default': default_tokenizer,
     'bible': bible_tokenizer,
     'koran': koran_tokenizer,
+    'poem': poem_tokenizer,
 }
 
 def main(inputfile, states, outputwords, tokenizer='default'):
@@ -46,6 +52,7 @@ def main(inputfile, states, outputwords, tokenizer='default'):
     while True:
         if w >= outputwords:
             if string[-1].endswith('.'): break
+            if string[-1].endswith('\n'): break
         candidates, weights = zip(*model[tuple(string[-states:])].items())
         weights = np.asarray(weights, dtype=float)
         weights /= np.sum(weights)
